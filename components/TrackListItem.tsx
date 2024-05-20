@@ -1,4 +1,4 @@
-import { StyleProp, Text, TouchableHighlight, View } from 'react-native';
+import { StyleProp, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { Image } from 'expo-image';
 
 import { Colors } from '@/constants/Colors';
@@ -38,7 +38,7 @@ export function TrackListItem({
     });
 
   return (
-    <TouchableHighlight onPress={() => clickHandler(track)}>
+    <TouchableWithoutFeedback onPress={() => clickHandler(track)}>
       <View style={styles.trackItemContainer}>
         <View>
           <Image
@@ -83,7 +83,7 @@ export function TrackListItem({
           </View>
         </View>
       </View>
-    </TouchableHighlight>
+    </TouchableWithoutFeedback>
   );
 }
 

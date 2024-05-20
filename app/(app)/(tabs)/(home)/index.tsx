@@ -5,7 +5,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableHighlight,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import { useMemo } from 'react';
@@ -75,7 +75,7 @@ export default function HomeScreen() {
         <ThemedView style={{ ...styles.titleContainer, paddingVertical: 16 }}>
           <ThemedText type="subtitle">Song of the day</ThemedText>
         </ThemedView>
-        <TouchableHighlight
+        <TouchableWithoutFeedback
           onPress={() => {
             router.push(`/track/${recommendedTrack.title}`);
           }}
@@ -127,7 +127,7 @@ export default function HomeScreen() {
               </View>
             </View>
           </View>
-        </TouchableHighlight>
+        </TouchableWithoutFeedback>
 
         <ThemedView style={{ ...styles.titleContainer, paddingTop: 16 }}>
           <ThemedText type="subtitle">Recommended Songs</ThemedText>
