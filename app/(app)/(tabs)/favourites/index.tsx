@@ -2,12 +2,13 @@ import { DefaultStyles, UtilStyles } from '@/constants/Styles';
 import { FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { Image } from 'expo-image';
 
-import tracks from '@/assets/data/library.json';
 import { Colors } from '@/constants/Colors';
 import { FontSize } from '@/constants/Fonts';
 import { unknownTrackImageUri } from '@/constants/Images';
 import { TrackListItem } from '@/components/TrackListItem';
 import { useColorTheme } from '@/hooks/useColorTheme';
+import { useTracksStore } from '@/store/tracks';
+import { useMemo } from 'react';
 
 export default function FavouritesScreen() {
   const theme = useColorTheme();
@@ -24,7 +25,14 @@ export default function FavouritesScreen() {
     />
   );
 
-  const favouriteTracks = [...tracks].reverse().slice(0, 5);
+  const favouriteTrackTitles = useTracksStore((state) => state.favourites);
+
+  const tracks = useTracksStore((state) => state.tracks);
+
+  const favouriteTracks = useMemo(
+    () => tracks.filter((track) => favouriteTrackTitles.includes(track.title)),
+    [tracks, favouriteTrackTitles],
+  );
 
   return (
     <View style={DefaultStyles[theme].container}>

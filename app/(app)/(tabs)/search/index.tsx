@@ -4,12 +4,12 @@ import { FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { useMemo } from 'react';
 import { Image } from 'expo-image';
 
-import tracks from '@/assets/data/library.json';
 import { Colors } from '@/constants/Colors';
 import { FontSize } from '@/constants/Fonts';
 import { unknownTrackImageUri } from '@/constants/Images';
 import { TrackListItem } from '@/components/TrackListItem';
 import { useColorTheme } from '@/hooks/useColorTheme';
+import { useTracksStore } from '@/store/tracks';
 
 const trackTitleFilter = (title: string) => (track: any) =>
   track.title?.toLowerCase().includes(title.toLowerCase());
@@ -35,11 +35,13 @@ export default function Screen() {
     },
   });
 
+  const tracks = useTracksStore((state) => state.tracks);
+
   const filteredTracks = useMemo(() => {
     if (!search) return tracks;
 
     return tracks.filter(trackTitleFilter(search));
-  }, [search]);
+  }, [search, tracks]);
 
   return (
     <View style={DefaultStyles[theme].container}>
@@ -63,7 +65,7 @@ export default function Screen() {
             </View>
           }
           renderItem={({ item: track }) => (
-            <TrackListItem track={track} styles={styles} />
+            <TrackListItem track={track} styles={styles} actions={true} />
           )}
         />
       </SafeAreaView>

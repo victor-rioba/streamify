@@ -4,5 +4,5 @@ export type Track = {
   artist?: string;
   artwork?: string;
   rating?: number;
-  playlist: string[];
+  playlist?: string[];
 };

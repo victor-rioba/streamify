@@ -11,7 +11,6 @@ import {
 import { useMemo } from 'react';
 import { Image } from 'expo-image';
 
-import tracks from '@/assets/data/library.json';
 import { Colors } from '@/constants/Colors';
 import { FontSize } from '@/constants/Fonts';
 import { unknownTrackImageUri } from '@/constants/Images';
@@ -24,6 +23,7 @@ import { TrackListItem } from '@/components/TrackListItem';
 import { useColorTheme } from '@/hooks/useColorTheme';
 import AppButton from '@/components/AppButton';
 import { router } from 'expo-router';
+import { useTracksStore } from '@/store/tracks';
 
 const trackTitleFilter = (title: string) => (track: any) =>
   track.title?.toLowerCase().includes(title.toLowerCase());
@@ -43,13 +43,17 @@ export default function HomeScreen() {
 
   const isActiveTrack = false;
 
-  const recommendedTrack = tracks[12];
+  const tracks = useTracksStore((state) => state.tracks);
+
+  const recommendedTrack = useMemo(() => {
+    return tracks[12];
+  }, [tracks]);
 
   const filteredTracks = useMemo(() => {
     if (!search) return tracks;
 
     return tracks.filter(trackTitleFilter(search));
-  }, [search]);
+  }, [search, tracks]);
 
   const api = useApi();
 

@@ -1,35 +1,52 @@
 import { StyleProp, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { Image } from 'expo-image';
+import Toast from 'react-native-root-toast';
 
 import { Colors } from '@/constants/Colors';
 import { unknownTrackImageUri } from '@/constants/Images';
 
 import { router } from 'expo-router';
 import { useColorTheme } from '@/hooks/useColorTheme';
-
-type Track = {
-  url: string;
-  title: string;
-  artist?: string;
-  artwork?: string;
-  rating?: number;
-  playlist?: string[];
-};
+import { Track } from '@/api/types';
+import { Ionicons } from '@expo/vector-icons';
+import { useTracksStore } from '@/store/tracks';
 
 export type TracksListItemProps = {
   track: Track;
   onTrackSelect?: (track: Track) => void;
   styles: { [key: string]: StyleProp<any> };
+  actions?: boolean;
 };
 
 export function TrackListItem({
   track,
   onTrackSelect: handleTrackSelect,
   styles,
+  actions,
 }: TracksListItemProps) {
   const theme = useColorTheme();
 
   const isActiveTrack = false;
+
+  const addToFavourites = useTracksStore((store) => store.addToFavourites);
+
+  const removeFromFavourites = useTracksStore(
+    (store) => store.removeFromFavourites,
+  );
+
+  const isFavourite = useTracksStore((store) =>
+    store.favourites.includes(track.title),
+  );
+
+  const handleClickFavourite = (trackTitle: string) => {
+    if (isFavourite) {
+      removeFromFavourites(trackTitle);
+      Toast.show('Removed from favourites');
+    } else {
+      addToFavourites(trackTitle);
+      Toast.show('Added to favourites');
+    }
+  };
 
   const clickHandler =
     handleTrackSelect ??
@@ -82,6 +99,22 @@ export function TrackListItem({
             )}
           </View>
         </View>
+
+        {actions && (
+          <View style={{ gap: 12 }}>
+            <Ionicons
+              onPress={() => handleClickFavourite(track.title)}
+              name="heart"
+              size={16}
+              color={isFavourite ? 'red' : styles.trackArtistText.color}
+            />
+            <Ionicons
+              name="play"
+              size={16}
+              color={styles.trackArtistText.color}
+            />
+          </View>
+        )}
       </View>
     </TouchableWithoutFeedback>
   );
